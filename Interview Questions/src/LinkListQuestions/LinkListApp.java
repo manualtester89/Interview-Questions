@@ -1,5 +1,6 @@
 package LinkListQuestions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import binaryTreeQuestions.BinaryTree;
@@ -240,23 +241,158 @@ public class LinkListApp {
 	}
 
 	// pairwise reversal
+	public LinkList pairWiseReversal(LinkList head){
+		if(head==null || head.getNext()==null)return head;
+		LinkList current = head;
+		while(current!=null&& current.getNext()!=null){
+			swap(current, current.getNext());
+			current=current.getNext().getNext();
+		}
+		return null;
+	}
 
 	// k reversal
 
+	private void swap(LinkList current, LinkList next) {
+		int temp  = current.getData();
+		current.setData(next.getData());
+		next.setData(temp);		
+	}
+
 	// spiral Linklist
+	public LinkList sprialLinkList(LinkList head){
+		if(head==null)return head;
+		LinkList mid  = middleLinkList(head);
+		mid = reverseLinkList(mid);
+		LinkList current = head;
+		LinkList midCopy =mid;
+		while(current.getNext()!=midCopy){
+			LinkList temp  = current.getNext();
+			current.setNext(mid);
+			LinkList temp2= mid.getNext();
+			mid.setNext(temp);
+			current = temp;
+			mid=temp2;
+		}
+		return head;
+	}
 
 	// divide circular linklist in two circular list
+	public LinkList spiltLinkList(LinkList head){
+		if(head==null||head.getNext()==null)return head;
+		//LinkList mid = middleLinkList(head);
+		LinkList current = head;
+		LinkList second= head;
+		while(current!=null&&current.getNext()!=head){
+			current=current.getNext().getNext();
+			second= second.getNext();
+		}
+		LinkList head2= second.getNext();
+		second.setNext(head);
+		current.setNext(head2);
+		return head;		
+	}
 
 	// check if linklist is palindrome
+	public boolean isPalindrome(LinkList head){
+		LinkList first= head, second=first;
+		while(first!=null&& first.getNext()!=null){
+			first= first.getNext().getNext();
+			second= second.getNext();
+		}
+		if(first!=null&&first.getNext()==null){
+			second=second.getNext();
+		}
+		second= reverseLinkList(second);
+		first = head;
+		while(second!=null){
+			if(first.getData()!=second.getData()){
+				return false;
+			}
+		}
+		return true;
+	}
 
 	// rotate linklist
+	public LinkList rotateLinkList(LinkList head, int k){
+		if(head==null)return head;
+		LinkList current = head;
+		int count=1;
+		while(count<k){
+			current= current.getNext();
+			count++;
+		}
+		if(current==null)return head;
+		LinkList last =current;
+		while(current.getNext()!=null){
+			current=current.getNext();
+		}
+		current.setNext(head);
+		head= last.getNext();
+		return head;
+	}
 
 	// merge k sorted linklist
+	public LinkList mergeList(LinkList a, LinkList b){
+		if(a==null)return b;
+		if(b==null)return a;
+		LinkList result;
+		if(a.getData()<b.getData()){
+			result=a;
+			result.setNext(mergeList(a.getNext(), b));
+		}else{
+			result =b;
+			result.setNext(mergeList(a, b.getNext()));;
+		}
+		return result;
+	}
+	
+	public LinkList mergeN(ArrayList<LinkList> total){
+		if(total==null)return null;
+		LinkList first =total.get(0);
+		for (int i = 1; i < total.size(); i++) {
+			first = mergeList(first, total.get(i));
+		}
+		return first;
+	}
 
 	// remove duplicates from linklist
+	public LinkList removeDuplicates(LinkList head){
+		if(head==null)return head;
+		LinkList current = head;
+		while(current.getNext()!=null){
+			if(current.getData()==current.getNext().getData()){
+				current.setNext(current.getNext().getNext());
+				continue;
+			}
+			current= current.getNext();
+		}
+		return head;
+	}
 
 	// LRU CACHE
+	
 
 	// doubly linklist to tree
+	static LinkList newHead=null;
+	public LinkList linkList2Tree(LinkList head){
+		int length = length(head);
+		newHead= head;
+		return linkList2TreeUtil(0,length);
+	}
+
+	private LinkList linkList2TreeUtil( int start, int end) {
+		if(start>end){
+			return null;
+		}
+		int mid = start+ (end-start)/2;
+		LinkList left = linkList2TreeUtil(0, mid-1);
+		LinkList temp= newHead;
+		//temp.setprev(left);
+		newHead = newHead.getNext();
+		LinkList right = linkList2TreeUtil(mid+1, end);
+		temp.setNext(right);
+		return temp;
+	}
 
 }

@@ -9,12 +9,13 @@ public class BinaryTreeApp {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		BinaryTree root = new BinaryTree(1);
+		/*BinaryTree root = new BinaryTree(1);
 		root.setLeft(new BinaryTree(2));
 		root.setRight(new BinaryTree(3));
 		root.getLeft().setLeft(new BinaryTree(4));
 		root.getLeft().setRight(new BinaryTree(5));
-		new BinaryTreeApp().morrisInOrder(root);
+		new BinaryTreeApp().morrisInOrder(root);*/
+		System.out.println(new BinaryTreeApp().maxSumPath(new BinaryTree(-3)));
 	}
 
 	// inOrderTraversal recursive
@@ -563,6 +564,34 @@ public class BinaryTreeApp {
 		}
 
 		return root;
+	}
+	
+	// max path sum between two nodes of the tree
+	static int maxSubtreeSum=Integer.MIN_VALUE;
+	public int maxSumPath(BinaryTree root){
+		if(root==null)return -1;
+		int maxSum = maxSumPathUtil(root);
+		if(maxSum>maxSubtreeSum){
+			return maxSum;
+		}else{
+			return maxSubtreeSum;
+		}
+	}
+
+	private int maxSumPathUtil(BinaryTree root) {
+		if(root==null)return 0;
+		
+		int left =maxSumPathUtil(root.getLeft());
+		int right = maxSumPathUtil(root.getRight());
+		int currentData = root.getData();
+		if(currentData+left>currentData){
+			currentData=currentData+left;
+		}
+		if(currentData+right>currentData){
+			currentData= currentData+ right;
+		}
+		maxSubtreeSum = Math.max(currentData,maxSubtreeSum);
+		return Math.max(left+root.getData(), Math.max(root.getData(), right+ root.getData()));
 	}
 
 }
